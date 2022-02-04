@@ -1,5 +1,5 @@
 require "erb"
-require "fileutils"
+require "webrick"
 
 FRAMEWORKS = %w(react)
 
@@ -24,6 +24,22 @@ def render_erb(file)
   ERB.new(File.read(file)).result
 end
 
+def upload_sourcemaps(app_path, revision, push_api_key)
+  base_path = "#{app_path}/build/static/js/"
+  Dir["#{base_path}*.js"].each do |path|
+    filename = path.gsub(base_path, "")
+    puts "Uploading sourcemap for #{filename}"
+    curl_command = <<-CURL
+    curl --fail-with-body -k -X POST -H 'Content-Type: multipart/form-data' \
+      -F 'name[]=http://localhost:3000/static/js/#{filename}' \
+      -F 'revision=#{revision}' \
+      -F 'file=@./#{base_path}#{filename}.map' \
+      'https://appsignal.com/api/sourcemaps?push_api_key=#{push_api_key}'
+    CURL
+    run_command curl_command
+  end
+end
+
 def run_command(command)
   puts "Running '#{command}'"
   # Spawn child process with parent process STDIN, STDOUT and STDERR
@@ -37,10 +53,22 @@ def run_command(command)
 end
 
 namespace :app do
-  task :run do
+  task :install do
     @app = get_app
     run_command "cd #{@app} && npm install"
-    run_command "cd #{@app} && npm start"
+  end
+
+  task :run do
+    @app = get_app
+    # Make a production build
+    run_command "cd #{@app} && npm run build"
+    # Upload the sourcemaps
+    upload_sourcemaps(@app, ENV['revision'], ENV['push_api_key']) # TODO make a better system to set revision and push api key
+    # Run a webserver
+    WEBrick::HTTPServer.new(
+      :Port => 3000,
+      :DocumentRoot => "#{@app}/build"
+    ).start
   end
 end
 
