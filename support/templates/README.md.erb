@@ -2,12 +2,16 @@
 
 <!-- Generated from support/templates/README.md.erb -->
 
-This repository contains a set of frontend apps to test with.
-Get started by generating `appsignal.js` files for all apps:
+This repository contains a set of frontend apps to test with. Get started
+by adding a push and frontend key:
 
 ```
-rake global:set_appsignal_config key=<key>
+cp keys.example.yml keys.yml
 ```
+
+Open this file and follow the instructions.
+
+## Usage
 
 To install an app:
 
@@ -15,8 +19,10 @@ To install an app:
 <% @apps.each do |app | %>rake app:install app=<%= app %>
 <% end %>```
 
-To run an app:
+To run an app and upload its sourcemaps:
 
 ```
-<% @apps.each do |app | %>rake app:run app=<%= app %> revision=<revision> push_api_key=<key>
+<% @apps.each do |app | %>rake app:run app=<%= app %> revision=<revision>
 <% end %>```
+
+Then navigate to http://localhost:3000 to trigger an error.
