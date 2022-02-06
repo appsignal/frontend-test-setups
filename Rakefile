@@ -3,7 +3,7 @@ require "./support/helpers.rb"
 namespace :app do
   task :install do
     @app = get_app
-    run_command "cd #{@app} && npm install"
+    run_npm_install @app
   end
 
   task :run do
@@ -32,11 +32,16 @@ namespace :app do
   end
 end
 
-namespace :global do
-  desc "Update the readme using the template"
-  task :update_readme do
-    puts "Updating readme"
-    @apps = app_paths
-    File.write "README.md", render_erb("support/templates/README.md.erb", binding)
+desc "Update the readme using the template"
+task :update_readme do
+  puts "Updating readme"
+  @apps = app_paths
+  File.write "README.md", render_erb("support/templates/README.md.erb", binding)
+end
+
+task :clean do
+  app_paths.each do |app_path|
+    run_command "cd #{app_path} && rm -rf package-lock.json"
+    run_command "cd #{app_path} && rm -rf node_modules"
   end
 end

@@ -14,12 +14,12 @@ describe "Error tracking", :type => :feature do
   end
 
   app_paths.each do |app_path|
-    let(:app) { app_path }
-
     context "for #{app_path}" do
+      let(:app) { app_path }
+
       before do
         # Install npm modules
-        run_command "cd #{app} && npm install"
+        run_npm_install app
         # Write appsignal.js
         write_appsignal_js(app, "frontend-key", "revision", "http://localhost:4567/collect")
         # Make production build

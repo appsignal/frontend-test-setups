@@ -71,7 +71,12 @@ def run_command(command)
   exit status.exitstatus unless status.success?
 end
 
+def run_npm_install(app)
+  run_command "cd #{app} && npm install --no-fund --no-audit"
+end
+
 def run_webserver(app_path, port=3000)
+  puts "Starting webserver for #{app_path}"
   WEBrick::HTTPServer.new(
     :Port => port,
     :DocumentRoot => "#{app_path}/build"
