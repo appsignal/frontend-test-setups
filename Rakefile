@@ -41,7 +41,8 @@ end
 
 task :clean do
   app_paths.each do |app_path|
-    run_command "cd #{app_path} && rm -rf package-lock.json"
+    run_command "cd #{app_path} && rm -rf build"
     run_command "cd #{app_path} && rm -rf node_modules"
+    run_command "cd #{app_path} && rm -rf package-lock.json"
   end
 end
