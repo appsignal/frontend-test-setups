@@ -2,8 +2,19 @@
 
 <!-- Generated from support/templates/README.md.erb -->
 
-This repository contains a set of frontend apps to test with. Get started
-by adding a push and frontend key:
+This repository contains a set of frontend apps to test with.
+
+## Setup
+
+Make sure you have have a working local Node.js install.
+Install geckodriver and install the bundle:
+
+```
+brew install geckodriver
+bundle install
+```
+
+Get started by adding a push and frontend key:
 
 ```
 cp keys.example.yml keys.yml
@@ -26,3 +37,7 @@ rake app:run app=react/17 revision=<revision>
 ```
 
 Then navigate to http://localhost:3000 to trigger an error.
+
+## Running tests
+
+Run `bundle exec rspec` to run an integration test on all test setups.

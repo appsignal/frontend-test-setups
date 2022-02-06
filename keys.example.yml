@@ -1,0 +1,7 @@
+# Copy this file as keys.yml and fetch an app-level push api key and
+# a frontend error monitoring key from "App Settings > Push & deploy"
+
+---
+
+push_key: ""
+frontend_key: ""

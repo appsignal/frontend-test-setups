@@ -2,5 +2,6 @@ import Appsignal from "@appsignal/javascript";
 
 export default new Appsignal({
   key: "<%= @frontend_key %>",
-  revision: "<%= @revision %>"
+  revision: "<%= @revision %>",
+  uri: "<%= @uri %>"
 });

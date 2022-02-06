@@ -8,7 +8,7 @@ import App from './App';
 import appsignal from "./appsignal.js"
 
 const FallbackComponent = () => (
-  <div>Uh oh! There was an error :(</div>
+  <div>An error was thrown</div>
 );
 
 const WrappedApp = () => (

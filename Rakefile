@@ -1,6 +1,3 @@
-require "erb"
-require "webrick"
-require "yaml"
 require "./support/helpers.rb"
 
 namespace :app do
@@ -18,23 +15,20 @@ namespace :app do
     @push_key = @keys["push_key"] or raise "No push key set in keys.yml"
     @revision = ENV["revision"] or raise "No revision set in env"
 
-    puts "Writing appsignal.js"
-    File.write(
-      "#{@app}/src/appsignal.js",
-      render_erb("support/templates/appsignal.js.erb")
-    )
+    # Set default production uri
+    @uri = "https://appsignal-endpoint.net/collect"
 
-    # Make a production build
+    puts "Writing appsignal.js"
+    write_appsignal_js(@app, @frontend_key, @revision, @uri)
+
+    # Make production build
     run_command "cd #{@app} && npm run build"
 
     # Upload the sourcemaps
     upload_sourcemaps(@app, @revision, @push_key)
 
     # Run the webserver
-    WEBrick::HTTPServer.new(
-      :Port => 3000,
-      :DocumentRoot => "#{@app}/build"
-    ).start
+    run_webserver(@app)
   end
 end
 
@@ -43,6 +37,6 @@ namespace :global do
   task :update_readme do
     puts "Updating readme"
     @apps = app_paths
-    File.write "README.md", render_erb("support/templates/README.md.erb")
+    File.write "README.md", render_erb("support/templates/README.md.erb", binding)
   end
 end
