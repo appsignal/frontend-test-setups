@@ -6,8 +6,8 @@ This repository contains a set of frontend apps to test with.
 
 ## Setup
 
-Make sure you have have a working local Node.js install, version 16 or
-up. Install geckodriver and install the bundle:
+Make sure you have have a working local Node.js install.
+Install geckodriver and install the bundle:
 
 ```
 brew install geckodriver
@@ -43,3 +43,27 @@ Then navigate to http://localhost:5001 to trigger an error.
 ## Running tests
 
 Run `bundle exec rspec` to run an integration test on all test setups.
+
+## Adding a new app
+
+You can add a new test app in one of the framework directories. Add this
+line to import a configured `Appsignal` instance:
+
+```javascript
+import appsignal from "./appsignal.js"
+```
+
+Make sure to use wildcard dependencies in `package.json`. Specify the
+major version of the framework you're using, for example `=2` or `=3`.
+
+For the tests to pass a test app should throw a JS error on `/`:
+
+```javascript
+throw new Error("This is an error")
+```
+
+This error should be catched by the app, the app should render the following text:
+
+```
+An error was thrown
+```
