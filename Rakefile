@@ -28,7 +28,17 @@ namespace :app do
     upload_sourcemaps(@app, @revision, @push_key)
 
     # Run the webserver
-    run_webserver(@app)
+    Thread.new do
+      run_webserver(@app)
+    end
+
+    # Open page in the browser
+    run_command "open http://localhost:5001"
+
+    # Stay alive
+    loop do
+      sleep 1
+    end
   end
 end
 

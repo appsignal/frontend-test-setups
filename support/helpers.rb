@@ -46,7 +46,7 @@ def upload_sourcemaps(app_path, revision, push_api_key)
     puts "Uploading sourcemap for #{filename}"
     curl_command = <<-CURL
     curl -k -X POST -H 'Content-Type: multipart/form-data' \
-      -F 'name[]=http://localhost:3000/static/js/#{filename}' \
+      -F 'name[]=http://localhost:5001/static/js/#{filename}' \
       -F 'revision=#{revision}' \
       -F 'file=@./#{base_path}#{filename}.map' \
       'https://appsignal.com/api/sourcemaps?push_api_key=#{push_api_key}'
@@ -75,7 +75,7 @@ def run_npm_install(app)
   run_command "cd #{app} && npm install --no-fund --no-audit"
 end
 
-def run_webserver(app_path, port=3000)
+def run_webserver(app_path, port=5001)
   puts "Starting webserver for #{app_path}"
   WEBrick::HTTPServer.new(
     :Port => port,
