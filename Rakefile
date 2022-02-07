@@ -15,11 +15,13 @@ namespace :app do
     @push_key = @keys["push_key"] or raise "No push key set in keys.yml"
     @revision = ENV["revision"] or raise "No revision set in env"
 
-    # Set default production uri
-    @uri = "https://appsignal-endpoint.net/collect"
-
     puts "Writing appsignal.js"
-    write_appsignal_js(@app, @frontend_key, @revision, @uri)
+    write_appsignal_js(
+      @app,
+      @frontend_key,
+      @revision,
+      "https://appsignal-endpoint.net/collect"
+    )
 
     # Make production build
     run_command "cd #{@app} && npm run build"
