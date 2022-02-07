@@ -55,7 +55,7 @@ def write_appsignal_js(app, frontend_key, revision, uri)
   )
 end
 
-def upload_sourcemaps(app, revision, push_api_key)
+def upload_sourcemaps(app, uri, revision, push_api_key)
   config = framework_config(app)
   base_path = "frameworks/#{app}/#{config[:build_dir]}/#{config[:js_dir]}/"
   Dir["#{base_path}*.js"].each do |path|
@@ -66,7 +66,7 @@ def upload_sourcemaps(app, revision, push_api_key)
       -F 'name[]=http://localhost:5001/js/#{filename}' \
       -F 'revision=#{revision}' \
       -F 'file=@./#{base_path}#{filename}.map' \
-      'https://appsignal.com/api/sourcemaps?push_api_key=#{push_api_key}'
+      '#{uri}?push_api_key=#{push_api_key}'
     CURL
     run_command curl_command
   end

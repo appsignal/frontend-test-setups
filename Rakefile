@@ -14,20 +14,23 @@ namespace :app do
     @frontend_key = @keys["frontend_key"] or raise "No frontend key set in keys.yml"
     @push_key = @keys["push_key"] or raise "No push key set in keys.yml"
     @revision = ENV["revision"] or raise "No revision set in env"
+    # Use uris from keys.yml, or the default production ones
+    @uri = @keys["uri"] || "https://appsignal-endpoint.net/collect"
+    @sourcemap_uri = @keys["sourcemaps_uri"] || "https://appsignal.com/api/sourcemaps"
 
     puts "Writing appsignal.js"
     write_appsignal_js(
       @app,
       @frontend_key,
       @revision,
-      "https://appsignal-endpoint.net/collect"
+      @uri
     )
 
     # Make production build
     run_npm_build @app
 
     # Upload the sourcemaps
-    upload_sourcemaps(@app, @revision, @push_key)
+    upload_sourcemaps(@app, @sourcemap_uri, @revision, @push_key)
 
     # Run the webserver
     Thread.new do
