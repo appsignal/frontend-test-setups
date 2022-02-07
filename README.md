@@ -6,8 +6,8 @@ This repository contains a set of frontend apps to test with.
 
 ## Setup
 
-Make sure you have have a working local Node.js install.
-Install geckodriver and install the bundle:
+Make sure you have have a working local Node.js install, version 16 or
+up. Install geckodriver and install the bundle:
 
 ```
 brew install geckodriver
