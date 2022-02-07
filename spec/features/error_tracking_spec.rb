@@ -13,17 +13,22 @@ describe "Error tracking", :type => :feature do
     end
   end
 
-  app_paths.each do |app_path|
-    context "for #{app_path}" do
-      let(:app) { app_path }
+  all_apps.each do |a_app|
+    context "for #{a_app}" do
+      let(:app) { a_app }
 
       before do
         # Install npm modules
         run_npm_install app
         # Write appsignal.js
-        write_appsignal_js(app, "frontend-key", "revision", "http://localhost:4567/collect")
+        write_appsignal_js(
+          app,
+          "frontend-key",
+          "revision",
+          "http://localhost:4567/collect"
+        )
         # Make production build
-        run_command "cd #{app} && npm run build"
+        run_npm_build app
         # Start webserver
         app_server
       end
@@ -36,10 +41,6 @@ describe "Error tracking", :type => :feature do
       it "should track a frontend error" do
         # Visit page with an error
         visit "http://localhost:9001"
-
-        # Should have text that indicates an error was thrown
-        # and catched too.
-        expect(page).to have_content "An error was thrown"
 
         # Should be sent to the mock endpoint
         request = EndpointServer.pop_received_request

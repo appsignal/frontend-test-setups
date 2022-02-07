@@ -5,6 +5,7 @@ node_modules
 package-lock.json
 coverage
 build
+dist
 appsignal.js
 *.log
 .DS_Store

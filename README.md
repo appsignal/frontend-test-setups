@@ -27,15 +27,17 @@ Open this file and follow the instructions.
 To install an app:
 
 ```
-rake app:install app=react/16
-rake app:install app=react/17
+rake app:install app=frameworks/react/16
+rake app:install app=frameworks/react/17
+rake app:install app=frameworks/vue/2
 ```
 
 To run an app and upload its sourcemaps:
 
 ```
-rake app:run app=react/16 revision=<revision>
-rake app:run app=react/17 revision=<revision>
+rake app:run app=frameworks/react/16 revision=<revision>
+rake app:run app=frameworks/react/17 revision=<revision>
+rake app:run app=frameworks/vue/2 revision=<revision>
 ```
 
 Then navigate to http://localhost:5001 to trigger an error.

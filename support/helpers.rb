@@ -2,18 +2,34 @@ require "erb"
 require "yaml"
 require "webrick"
 
-FRAMEWORKS = %w(react)
+FRAMEWORKS = {
+  "react" => {
+    :build_dir => "build",
+    :js_dir => "static/js"
+  },
+  "vue" => {
+    :build_dir => "dist",
+    :js_dir => "js"
+  }
+}
 
-def app_paths
-  FRAMEWORKS.map do |language|
-    Dir["#{language}/*"].sort
-  end.flatten
+def all_apps
+  FRAMEWORKS.map do |language, config|
+    Dir["frameworks/#{language}/*"].sort
+  end.flatten.map do |path|
+    path.gsub("frameworks/", "")
+  end
+end
+
+def framework_config(app)
+  framework = app.split("/").first
+  FRAMEWORKS[framework] or raise "#{framework} not configured"
 end
 
 def get_app
   ENV['app'].tap do |app|
     raise "Specify which app you want to run using app=path" if app.nil?
-    raise "#{app} not found" unless File.exists?(app)
+    raise "#{app} not found" unless File.exists?("frameworks/#{app}")
   end
 end
 
@@ -28,25 +44,26 @@ def render_erb(file, binding)
   ERB.new(File.read(file)).result(binding)
 end
 
-def write_appsignal_js(app_path, frontend_key, revision, uri)
+def write_appsignal_js(app, frontend_key, revision, uri)
   @frontend_key = frontend_key
   @revision = revision
   @uri = uri
   puts "Writing appsignal with #{@frontend_key} - #{@revision} - #{@uri}"
   File.write(
-    "#{app_path}/src/appsignal.js",
+    "frameworks/#{app}/src/appsignal.js",
     render_erb("support/templates/appsignal.js.erb", binding)
   )
 end
 
-def upload_sourcemaps(app_path, revision, push_api_key)
-  base_path = "#{app_path}/build/static/js/"
+def upload_sourcemaps(app, revision, push_api_key)
+  config = framework_config(app)
+  base_path = "frameworks/#{app}/#{config[:build_dir]}/#{config[:js_dir]}/"
   Dir["#{base_path}*.js"].each do |path|
     filename = path.gsub(base_path, "")
     puts "Uploading sourcemap for #{filename}"
     curl_command = <<-CURL
     curl -k -X POST -H 'Content-Type: multipart/form-data' \
-      -F 'name[]=http://localhost:5001/static/js/#{filename}' \
+      -F 'name[]=http://localhost:5001/js/#{filename}' \
       -F 'revision=#{revision}' \
       -F 'file=@./#{base_path}#{filename}.map' \
       'https://appsignal.com/api/sourcemaps?push_api_key=#{push_api_key}'
@@ -72,13 +89,18 @@ def run_command(command)
 end
 
 def run_npm_install(app)
-  run_command "cd #{app} && npm install --no-fund --no-audit"
+  run_command "cd frameworks/#{app} && npm install --no-fund --no-audit"
 end
 
-def run_webserver(app_path, port=5001)
-  puts "Starting webserver for #{app_path}"
+def run_npm_build(app)
+  run_command "cd frameworks/#{app} && npm run build"
+end
+
+def run_webserver(app, port=5001)
+  puts "Starting webserver for #{app}"
+  config = framework_config(app)
   WEBrick::HTTPServer.new(
     :Port => port,
-    :DocumentRoot => "#{app_path}/build"
+    :DocumentRoot => "frameworks/#{app}/#{config[:build_dir]}"
   ).start
 end

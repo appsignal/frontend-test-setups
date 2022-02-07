@@ -24,7 +24,7 @@ namespace :app do
     )
 
     # Make production build
-    run_command "cd #{@app} && npm run build"
+    run_npm_build @app
 
     # Upload the sourcemaps
     upload_sourcemaps(@app, @revision, @push_key)
@@ -47,14 +47,15 @@ end
 desc "Update the readme using the template"
 task :update_readme do
   puts "Updating readme"
-  @apps = app_paths
+  @apps = all_apps
   File.write "README.md", render_erb("support/templates/README.md.erb", binding)
 end
 
 task :clean do
-  app_paths.each do |app_path|
-    run_command "cd #{app_path} && rm -rf build"
-    run_command "cd #{app_path} && rm -rf node_modules"
-    run_command "cd #{app_path} && rm -rf package-lock.json"
+  all_apps.each do |app|
+    run_command "cd frameworks/#{app} && rm -rf build"
+    run_command "cd frameworks/#{app} && rm -rf dist"
+    run_command "cd frameworks/#{app} && rm -rf node_modules"
+    run_command "cd frameworks/#{app} && rm -rf package-lock.json"
   end
 end
