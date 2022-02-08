@@ -79,20 +79,14 @@ def upload_sourcemaps(app, uri, revision, push_api_key)
   end
 end
 
-def child_processes
-  @child_processes ||= []
-end
-
 def run_command(command)
   puts "Running '#{command}'"
   # Spawn child process with parent process STDIN, STDOUT and STDERR
   pid = spawn({}, command, :in => $stdin, :out => $stdout, :err => $stderr)
-  # Register child process so we can wait for it to exit gracefully later
-  child_processes << [pid, command]
   # Wait for child process to end
   _pid, status = Process.wait2(pid)
-  # Exit with the error status code if an error occurred in the child process
-  exit status.exitstatus unless status.success?
+  # Raise with the error status code if an error occurred in the child process
+  raise "Error running command: #{status.exitstatus}" unless status.success?
 end
 
 def run_install(app)
