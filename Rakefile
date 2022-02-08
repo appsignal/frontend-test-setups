@@ -47,6 +47,18 @@ namespace :app do
   end
 end
 
+desc "Link local checkout of the javascript packages"
+task :link do
+  puts "Linking integrations"
+  run_link
+end
+
+desc "Unlink local checkout of the javascript packages"
+task :unlink do
+  puts "Unlinking integrations"
+  run_unlink
+end
+
 desc "Update the readme using the template"
 task :update_readme do
   puts "Updating readme"

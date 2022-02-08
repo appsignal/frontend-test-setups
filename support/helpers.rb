@@ -103,6 +103,26 @@ def run_build(app)
   run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} run build"
 end
 
+def run_link
+  all_apps.each do |app|
+    framework = app.split("/").first
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link @appsignal/core"
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link @appsignal/javascript"
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link @appsignal/types"
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link @appsignal/#{framework}"
+  end
+end
+
+def run_unlink
+  all_apps.each do |app|
+    framework = app.split("/").first
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink @appsignal/core"
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink @appsignal/javascript"
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink @appsignal/types"
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink @appsignal/#{framework}"
+  end
+end
+
 def run_webserver(app, port=5001)
   puts "Starting webserver for #{app}"
   config = framework_config(app)
