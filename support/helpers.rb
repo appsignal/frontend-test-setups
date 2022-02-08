@@ -13,6 +13,8 @@ FRAMEWORKS = {
   }
 }
 
+PACKAGE_MANAGER = "yarn"
+
 def all_apps
   FRAMEWORKS.map do |language, config|
     Dir["frameworks/#{language}/*"].sort
@@ -44,13 +46,18 @@ def render_erb(file, binding)
   ERB.new(File.read(file)).result(binding)
 end
 
-def write_appsignal_js(app, frontend_key, revision, uri)
+def write_appsignal_config(app, frontend_key, revision, uri)
   @frontend_key = frontend_key
   @revision = revision
   @uri = uri
   puts "Writing appsignal with #{@frontend_key} - #{@revision} - #{@uri}"
+  filename = if File.exists?("frameworks/#{app}/tsconfig.json")
+               "appsignal.ts"
+             else
+               "appsignal.js"
+             end
   File.write(
-    "frameworks/#{app}/src/appsignal.js",
+    "frameworks/#{app}/src/#{filename}",
     render_erb("support/templates/appsignal.js.erb", binding)
   )
 end
@@ -88,12 +95,32 @@ def run_command(command)
   exit status.exitstatus unless status.success?
 end
 
-def run_npm_install(app)
-  run_command "cd frameworks/#{app} && npm install --no-fund --no-audit"
+def run_install(app)
+  run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} install --no-fund --no-audit"
 end
 
-def run_npm_build(app)
-  run_command "cd frameworks/#{app} && npm run build"
+def run_build(app)
+  run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} run build"
+end
+
+def run_link
+  all_apps.each do |app|
+    framework = app.split("/").first
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link @appsignal/core"
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link @appsignal/javascript"
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link @appsignal/types"
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link @appsignal/#{framework}"
+  end
+end
+
+def run_unlink
+  all_apps.each do |app|
+    framework = app.split("/").first
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink @appsignal/core"
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink @appsignal/javascript"
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink @appsignal/types"
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink @appsignal/#{framework}"
+  end
 end
 
 def run_webserver(app, port=5001)

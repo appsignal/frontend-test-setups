@@ -18,17 +18,17 @@ describe "Error tracking", :type => :feature do
       let(:app) { a_app }
 
       before do
-        # Install npm modules
-        run_npm_install app
+        # Install modules
+        run_install app
         # Write appsignal.js
-        write_appsignal_js(
+        write_appsignal_config(
           app,
           "frontend-key",
           "revision",
           "http://localhost:4567/collect"
         )
         # Make production build
-        run_npm_build app
+        run_build app
         # Start webserver
         app_server
       end
@@ -45,7 +45,7 @@ describe "Error tracking", :type => :feature do
         # Should be sent to the mock endpoint
         request = EndpointServer.pop_received_request
         expect(request).not_to be_nil
-        expect(request.env["rack.request.query_string"]).to eq "api_key=frontend-key&version=1.3.20"
+        expect(request.env["rack.request.query_string"]).to start_with "api_key=frontend-key&version="
 
         # Check the content of the body
         body = JSON.parse(request.body.read)

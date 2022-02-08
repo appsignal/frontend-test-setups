@@ -3,7 +3,7 @@ require "./support/helpers.rb"
 namespace :app do
   task :install do
     @app = get_app
-    run_npm_install @app
+    run_install @app
   end
 
   task :run do
@@ -19,7 +19,7 @@ namespace :app do
     @sourcemap_uri = @keys["sourcemaps_uri"] || "https://appsignal.com/api/sourcemaps"
 
     puts "Writing appsignal.js"
-    write_appsignal_js(
+    write_appsignal_config(
       @app,
       @frontend_key,
       @revision,
@@ -27,7 +27,7 @@ namespace :app do
     )
 
     # Make production build
-    run_npm_build @app
+    run_build @app
 
     # Upload the sourcemaps
     upload_sourcemaps(@app, @sourcemap_uri, @revision, @push_key)
@@ -47,6 +47,18 @@ namespace :app do
   end
 end
 
+desc "Link local checkout of the javascript packages"
+task :link do
+  puts "Linking integrations"
+  run_link
+end
+
+desc "Unlink local checkout of the javascript packages"
+task :unlink do
+  puts "Unlinking integrations"
+  run_unlink
+end
+
 desc "Update the readme using the template"
 task :update_readme do
   puts "Updating readme"
@@ -54,11 +66,13 @@ task :update_readme do
   File.write "README.md", render_erb("support/templates/README.md.erb", binding)
 end
 
+desc "Clean build, node_modules and lock files"
 task :clean do
   all_apps.each do |app|
     run_command "cd frameworks/#{app} && rm -rf build"
     run_command "cd frameworks/#{app} && rm -rf dist"
     run_command "cd frameworks/#{app} && rm -rf node_modules"
     run_command "cd frameworks/#{app} && rm -rf package-lock.json"
+    run_command "cd frameworks/#{app} && rm -rf yarn.lock"
   end
 end
