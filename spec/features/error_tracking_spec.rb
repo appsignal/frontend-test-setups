@@ -45,7 +45,7 @@ describe "Error tracking", :type => :feature do
         # Should be sent to the mock endpoint
         request = EndpointServer.pop_received_request
         expect(request).not_to be_nil
-        expect(request.env["rack.request.query_string"]).to eq "api_key=frontend-key&version=1.3.20"
+        expect(request.env["rack.request.query_string"]).to start_with "api_key=frontend-key&version="
 
         # Check the content of the body
         body = JSON.parse(request.body.read)
