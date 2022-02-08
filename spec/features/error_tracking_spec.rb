@@ -18,8 +18,8 @@ describe "Error tracking", :type => :feature do
       let(:app) { a_app }
 
       before do
-        # Install npm modules
-        run_npm_install app
+        # Install modules
+        run_install app
         # Write appsignal.js
         write_appsignal_config(
           app,
@@ -28,7 +28,7 @@ describe "Error tracking", :type => :feature do
           "http://localhost:4567/collect"
         )
         # Make production build
-        run_npm_build app
+        run_build app
         # Start webserver
         app_server
       end

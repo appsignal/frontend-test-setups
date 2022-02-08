@@ -13,6 +13,8 @@ FRAMEWORKS = {
   }
 }
 
+PACKAGE_MANAGER = "yarn"
+
 def all_apps
   FRAMEWORKS.map do |language, config|
     Dir["frameworks/#{language}/*"].sort
@@ -93,12 +95,12 @@ def run_command(command)
   exit status.exitstatus unless status.success?
 end
 
-def run_npm_install(app)
-  run_command "cd frameworks/#{app} && npm install --no-fund --no-audit"
+def run_install(app)
+  run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} install --no-fund --no-audit"
 end
 
-def run_npm_build(app)
-  run_command "cd frameworks/#{app} && npm run build"
+def run_build(app)
+  run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} run build"
 end
 
 def run_webserver(app, port=5001)

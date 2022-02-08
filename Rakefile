@@ -3,7 +3,7 @@ require "./support/helpers.rb"
 namespace :app do
   task :install do
     @app = get_app
-    run_npm_install @app
+    run_install @app
   end
 
   task :run do
@@ -27,7 +27,7 @@ namespace :app do
     )
 
     # Make production build
-    run_npm_build @app
+    run_build @app
 
     # Upload the sourcemaps
     upload_sourcemaps(@app, @sourcemap_uri, @revision, @push_key)
