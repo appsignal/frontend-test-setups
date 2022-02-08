@@ -7,5 +7,6 @@ coverage
 build
 dist
 appsignal.js
+appsignal.ts
 *.log
 .DS_Store

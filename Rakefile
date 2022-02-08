@@ -19,7 +19,7 @@ namespace :app do
     @sourcemap_uri = @keys["sourcemaps_uri"] || "https://appsignal.com/api/sourcemaps"
 
     puts "Writing appsignal.js"
-    write_appsignal_js(
+    write_appsignal_config(
       @app,
       @frontend_key,
       @revision,

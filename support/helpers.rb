@@ -44,13 +44,18 @@ def render_erb(file, binding)
   ERB.new(File.read(file)).result(binding)
 end
 
-def write_appsignal_js(app, frontend_key, revision, uri)
+def write_appsignal_config(app, frontend_key, revision, uri)
   @frontend_key = frontend_key
   @revision = revision
   @uri = uri
   puts "Writing appsignal with #{@frontend_key} - #{@revision} - #{@uri}"
+  filename = if File.exists?("frameworks/#{app}/tsconfig.json")
+               "appsignal.ts"
+             else
+               "appsignal.js"
+             end
   File.write(
-    "frameworks/#{app}/src/appsignal.js",
+    "frameworks/#{app}/src/#{filename}",
     render_erb("support/templates/appsignal.js.erb", binding)
   )
 end

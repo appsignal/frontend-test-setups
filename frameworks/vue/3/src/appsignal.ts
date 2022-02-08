@@ -2,8 +2,8 @@
 
 import Appsignal from "@appsignal/javascript";
 
-exports.appsignal = new Appsignal({
-  key: "4c499a2b-ee1f-4e06-82d6-fb4267f9a214",
-  revision: "abc123",
+export default new Appsignal({
+  key: "b032973f-732c-4c06-856a-3ec2eeb0b482",
+  revision: "vue3-aaa",
   uri: "https://appsignal-endpoint.net/collect"
 });

@@ -21,7 +21,7 @@ describe "Error tracking", :type => :feature do
         # Install npm modules
         run_npm_install app
         # Write appsignal.js
-        write_appsignal_js(
+        write_appsignal_config(
           app,
           "frontend-key",
           "revision",
