@@ -1,4 +1,7 @@
 require "erb"
+require "net/http"
+require "net/http/post/multipart"
+require "pry"
 require "yaml"
 require "webrick"
 
@@ -67,15 +70,22 @@ def upload_sourcemaps(app, uri, revision, push_api_key)
   base_path = "frameworks/#{app}/#{config[:build_dir]}/#{config[:js_dir]}/"
   Dir["#{base_path}*.js"].each do |path|
     filename = path.gsub(base_path, "")
-    puts "Uploading sourcemap for #{filename}"
-    curl_command = <<-CURL
-    curl -k -X POST -H 'Content-Type: multipart/form-data' \
-      -F 'name[]=http://localhost:5001/js/#{filename}' \
-      -F 'revision=#{revision}' \
-      -F 'file=@./#{base_path}#{filename}.map' \
-      '#{uri}?push_api_key=#{push_api_key}'
-    CURL
-    run_command curl_command
+    puts "Uploading sourcemap for #{filename} to #{uri}..."
+    full_uri =  URI("#{uri}?push_api_key=#{push_api_key}")
+    params = {
+      "name[]" => "http://localhost:5001/#{config[:js_dir]}/#{filename}",
+      "revision" => revision,
+      "file" => UploadIO.new(File.open("#{base_path}/#{filename}.map"), "application/json", "#{filename}.map")
+    }
+    request = Net::HTTP::Post::Multipart.new(full_uri, params)
+    response = Net::HTTP.start(full_uri.host, full_uri.port, :use_ssl => true) do |http|
+      http.request(request)
+    end
+    if response.code != "201"
+      raise "Unexpected response code: #{response.code}"
+    else
+      puts "Upload for #{filename} finished"
+    end
   end
 end
 
