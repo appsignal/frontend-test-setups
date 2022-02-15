@@ -74,18 +74,18 @@ An error was thrown
 
 ## Linking a local integration checkout
 
- To do local testing checkout the integrations somewhere, and run `mono
- bootstrap` in them. Then run:
+To do local testing checkout the integrations somewhere, and run `mono
+bootstrap` in them. Then run:
 
- ```
- rake link
- ```
+```
+rake link
+```
 
- This will link the local packages into all the test setups. To unlink:
+This will link the local packages into all the test setups. To unlink:
 
- ```
- rake unlink
- ```
+```
+rake unlink
+```
 
- Whenever you make changes to the integrations run `mono build`. If this is
- done running apps works in the usual manner.
+Whenever you make changes to the integrations run `mono build`. If this is
+done running apps works in the usual manner.
