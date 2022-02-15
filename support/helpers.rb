@@ -110,20 +110,26 @@ end
 def run_link
   all_apps.each do |app|
     framework = app.split("/").first
-    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link @appsignal/core"
-    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link @appsignal/javascript"
-    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link @appsignal/types"
-    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link @appsignal/#{framework}"
+    packages = [
+      "@appsignal/types",
+      "@appsignal/core",
+      "@appsignal/javascript",
+      "@appsignal/#{framework}",
+    ]
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} link #{packages.join(" ")}"
   end
 end
 
 def run_unlink
   all_apps.each do |app|
     framework = app.split("/").first
-    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink @appsignal/core"
-    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink @appsignal/javascript"
-    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink @appsignal/types"
-    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink @appsignal/#{framework}"
+    packages = [
+      "@appsignal/types",
+      "@appsignal/core",
+      "@appsignal/javascript",
+      "@appsignal/#{framework}",
+    ]
+    run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} unlink #{packages.join(" ")}"
   end
 end
 
