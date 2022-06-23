@@ -9,7 +9,7 @@ export class AppComponent implements OnInit {
   title = 'Hello world';
 
   ngOnInit(): void {
-    // throw new Error("This is an error")
+    throw new Error("This is an error")
   }
 
   
