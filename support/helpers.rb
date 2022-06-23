@@ -7,14 +7,17 @@ require "webrick"
 
 FRAMEWORKS = {
   "react" => {
+    :root => "build",
     :build_dir => "build",
-    :js_dir => "static/js"
+    :js_dir => "static/js",
   },
   "vue" => {
+    :root => "dist",
     :build_dir => "dist",
     :js_dir => "js"
   },
   "angular" => {
+    :root => "dist/app",
     :build_dir => "dist",
     :js_dir => "app"
   }
@@ -142,6 +145,6 @@ def run_webserver(app, port=5001)
   config = framework_config(app)
   WEBrick::HTTPServer.new(
     :Port => port,
-    :DocumentRoot => "frameworks/#{app}/#{config[:build_dir]}"
+    :DocumentRoot => "frameworks/#{app}/#{config[:root]}"
   ).start
 end
