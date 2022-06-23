@@ -13,6 +13,10 @@ FRAMEWORKS = {
   "vue" => {
     :build_dir => "dist",
     :js_dir => "js"
+  },
+  "angular" => {
+    :build_dir => "dist",
+    :js_dir => "app"
   }
 }
 
