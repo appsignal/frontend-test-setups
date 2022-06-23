@@ -27,6 +27,7 @@ Open this file and follow the instructions.
 To install an app:
 
 ```
+rake app:install app=angular/14
 rake app:install app=react/16
 rake app:install app=react/17
 rake app:install app=react/18
