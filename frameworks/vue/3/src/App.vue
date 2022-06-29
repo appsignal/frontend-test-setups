@@ -1,18 +1,15 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
   <HelloWorld msg="Welcome to your Vue.js App" />
-  <ErrorButton />
 </template>
 
 <script lang="ts">
   import HelloWorld from "@/components/HelloWorld.vue"
-  import ErrorButton from "@/components/ErrorButton.vue"
 
   export default {
     name: 'App',
     components: {
-      HelloWorld,
-      ErrorButton
+      HelloWorld
     }
   }
 </script>
