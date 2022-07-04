@@ -20,6 +20,11 @@ FRAMEWORKS = {
     :root => "dist/app",
     :build_dir => "dist",
     :js_dir => "app"
+  },
+  "stimulus" => {
+    :root => "public",
+    :build_dir => "public",
+    :js_dir => ""
   }
 }
 
