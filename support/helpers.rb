@@ -46,12 +46,12 @@ end
 def get_app
   ENV['app'].tap do |app|
     raise "Specify which app you want to run using app=path" if app.nil?
-    raise "#{app} not found" unless File.exists?("frameworks/#{app}")
+    raise "#{app} not found" unless File.exist?("frameworks/#{app}")
   end
 end
 
 def get_keys
-  unless File.exists?("keys.yml")
+  unless File.exist?("keys.yml")
     raise "Create a keys.yml file, see the readme"
   end
   YAML.load_file("keys.yml")
@@ -66,7 +66,7 @@ def write_appsignal_config(app, frontend_key, revision, uri)
   @revision = revision
   @uri = uri
   puts "Writing appsignal with #{@frontend_key} - #{@revision} - #{@uri}"
-  filename = if File.exists?("frameworks/#{app}/tsconfig.json")
+  filename = if File.exist?("frameworks/#{app}/tsconfig.json")
                "appsignal.ts"
              else
                "appsignal.js"
