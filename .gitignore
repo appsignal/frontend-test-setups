@@ -11,3 +11,4 @@ appsignal.js
 appsignal.ts
 *.log
 .DS_Store
+Gemfile.lock
