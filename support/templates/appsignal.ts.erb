@@ -10,4 +10,8 @@ const appsignal = new Appsignal({
 
 export default appsignal;
 
+declare global {
+  var appsignal: Appsignal
+}
+
 globalThis.appsignal = appsignal;

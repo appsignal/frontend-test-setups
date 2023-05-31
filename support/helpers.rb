@@ -77,7 +77,7 @@ def write_appsignal_config(app, frontend_key, revision, uri)
              end
   File.write(
     "frameworks/#{app}/src/#{filename}",
-    render_erb("support/templates/appsignal.js.erb", binding)
+    render_erb("support/templates/#{filename}.erb", binding)
   )
 end
 
