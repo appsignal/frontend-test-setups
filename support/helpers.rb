@@ -57,6 +57,10 @@ def get_keys
   YAML.load_file("keys.yml")
 end
 
+def demo_revision
+  "0123456789abcdef".chars.sample(7).join + "-demo"
+end
+
 def render_erb(file, binding)
   ERB.new(File.read(file)).result(binding)
 end
