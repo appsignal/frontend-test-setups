@@ -6,11 +6,18 @@ This repository contains a set of frontend apps to test with.
 
 ## Setup
 
-Make sure you have have a working local Node.js install.
-Install geckodriver and install the bundle:
+Make sure you have have a working local Node.js install. The
+Node.js version should match the one in the `.tool-versions` file.
+
+The `yarn` package manager should be globally installed:
 
 ```
-brew install geckodriver
+npm i -g yarn
+```
+
+Install the dependencies with bundle:
+
+```
 bundle install
 ```
 
@@ -54,7 +61,17 @@ Then navigate to http://localhost:5001 to trigger an error.
 
 ## Running tests
 
-Run `bundle exec rspec` to run an integration test on all test setups.
+To run the tests, you must have `geckodriver` installed:
+
+```
+brew install geckodriver
+```
+
+To run an integration test on all test setups:
+
+```
+bundle exec rspec
+```
 
 ## Adding a new app
 

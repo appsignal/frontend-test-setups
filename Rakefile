@@ -13,7 +13,11 @@ namespace :app do
     # Check if we have all input
     @frontend_key = @keys["frontend_key"] or raise "No frontend key set in keys.yml"
     @push_key = @keys["push_key"] or raise "No push key set in keys.yml"
-    @revision = ENV["revision"] or raise "No revision set in env"
+    @revision = ENV["revision"]
+    if @revision.nil?
+      @revision = demo_revision
+      puts "No revision set in env; using demo revision #{@revision.inspect}"
+    end
     # Use uris from keys.yml, or the default production ones
     @uri = @keys["uri"] || "https://appsignal-endpoint.net/collect"
     @sourcemap_uri = @keys["sourcemaps_uri"] || "https://appsignal.com/api/sourcemaps"
