@@ -74,7 +74,7 @@ desc "Clean build, node_modules and lock files"
 task :clean do
   all_apps.each do |app|
     config = app_config(app)
-    run_command "cd frameworks/#{app} && rm -rf #{config[:build_dir]}"
+    run_command "cd frameworks/#{app} && rm -rf #{config.fetch(:build_dir)}"
     run_command "cd frameworks/#{app} && rm -rf node_modules"
     run_command "cd frameworks/#{app} && rm -rf package-lock.json"
     run_command "cd frameworks/#{app} && rm -rf yarn.lock"

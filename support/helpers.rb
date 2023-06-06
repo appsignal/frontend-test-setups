@@ -51,19 +51,19 @@ CONFIGS = {
 PACKAGE_MANAGER = "yarn"
 
 def all_apps
-  Dir["frameworks/*/*"].sort.map do |path|
+  Dir["frameworks/*/*"].map do |path|
     path.gsub("frameworks/", "")
   end
 end
 
 def app_config(app)
-  config = CONFIGS.find do |key, value|
+  config_entry = CONFIGS.find do |key, value|
     app.start_with?(key)
   end
 
-  raise "#{app} not configured" unless config
+  raise "#{app} not configured" unless config_entry
 
-  config[1]
+  config_entry[1]
 end
 
 def get_app
@@ -106,13 +106,13 @@ end
 
 def upload_sourcemaps(app, uri, revision, push_api_key)
   config = app_config(app)
-  base_path = "frameworks/#{app}/#{config[:build_dir]}/#{config[:js_dir]}/"
+  base_path = "frameworks/#{app}/#{config.fetch(:build_dir)}/#{config.fetch(:js_dir)}/"
   Dir["#{base_path}*.js"].each do |path|
     filename = path.gsub(base_path, "")
     puts "Uploading sourcemap for #{filename} to #{uri}..."
     full_uri =  URI("#{uri}?push_api_key=#{push_api_key}")
     params = {
-      "name[]" => "http://localhost:5001/#{config[:js_dir]}/#{filename}",
+      "name[]" => "http://localhost:5001/#{config.fetch(:js_dir)}/#{filename}",
       "revision" => revision,
       "file" => UploadIO.new(File.open("#{base_path}/#{filename}.map"), "application/json", "#{filename}.map")
     }
@@ -153,7 +153,7 @@ def app_packages(app)
     "@appsignal/types",
     "@appsignal/core",
     "@appsignal/javascript",
-  ] + config[:packages]
+  ] + config.fetch(:packages)
 end
 
 def run_link
@@ -177,6 +177,6 @@ def run_webserver(app, port=5001)
   config = app_config(app)
   WEBrick::HTTPServer.new(
     :Port => port,
-    :DocumentRoot => "frameworks/#{app}/#{config[:root]}"
+    :DocumentRoot => "frameworks/#{app}/#{config.fetch(:root)}"
   ).start
 end
