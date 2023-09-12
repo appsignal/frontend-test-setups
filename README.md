@@ -37,9 +37,9 @@ To install an app:
 rake app:install app=stimulus/3
 rake app:install app=angular/13
 rake app:install app=angular/14
-rake app:install app=react/16
-rake app:install app=react/17
-rake app:install app=react/18
+rake app:install app=react/cra-16
+rake app:install app=react/cra-17
+rake app:install app=react/cra-18
 rake app:install app=vue/2
 rake app:install app=vue/3
 ```
@@ -50,9 +50,9 @@ To run an app and upload its sourcemaps:
 rake app:run app=stimulus/3 revision=<revision>
 rake app:run app=angular/13 revision=<revision>
 rake app:run app=angular/14 revision=<revision>
-rake app:run app=react/16 revision=<revision>
-rake app:run app=react/17 revision=<revision>
-rake app:run app=react/18 revision=<revision>
+rake app:run app=react/cra-16 revision=<revision>
+rake app:run app=react/cra-17 revision=<revision>
+rake app:run app=react/cra-18 revision=<revision>
 rake app:run app=vue/2 revision=<revision>
 rake app:run app=vue/3 revision=<revision>
 ```
