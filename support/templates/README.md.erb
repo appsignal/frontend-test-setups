@@ -6,11 +6,18 @@ This repository contains a set of frontend apps to test with.
 
 ## Setup
 
-Make sure you have have a working local Node.js install.
-Install geckodriver and install the bundle:
+Make sure you have have a working local Node.js install. The
+Node.js version should match the one in the `.tool-versions` file.
+
+The `yarn` package manager should be globally installed:
 
 ```
-brew install geckodriver
+npm i -g yarn
+```
+
+Install the dependencies with bundle:
+
+```
 bundle install
 ```
 
@@ -40,7 +47,17 @@ Then navigate to http://localhost:5001 to trigger an error.
 
 ## Running tests
 
-Run `bundle exec rspec` to run an integration test on all test setups.
+To run the tests, you must have `geckodriver` installed:
+
+```
+brew install geckodriver
+```
+
+To run an integration test on all test setups:
+
+```
+bundle exec rspec
+```
 
 ## Adding a new app
 
@@ -60,7 +77,7 @@ For the tests to pass a test app should throw a JS error on `/`:
 throw new Error("This is an error")
 ```
 
-This error should be catched by the app, the app should render the following text:
+This error should be caught by the app, the app should render the following text:
 
 ```
 An error was thrown
@@ -68,18 +85,20 @@ An error was thrown
 
 ## Linking a local integration checkout
 
- To do local testing checkout the integrations somewhere, and run `mono
- bootstrap` in them. Then run:
+To do local testing checkout the integrations somewhere, and run `mono
+bootstrap` in the directory. Then run:
 
- ```
- rake link
- ```
+```
+rake link
+```
 
- This will link the local packages into all the test setups. To unlink:
+This will link the local packages into all the test setups.
 
- ```
- rake unlink
- ```
+Whenever you make changes to the integrations run `mono build`. If this is
+done running apps works in the usual manner.
 
- Whenever you make changes to the integrations run `mono build`. If this is
- done running apps works in the usual manner.
+To undo this step and unlink the packages run:
+
+```
+rake unlink
+```
