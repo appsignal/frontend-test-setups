@@ -121,7 +121,10 @@ def upload_sourcemaps(app, uri, revision, push_api_key)
       http.request(request)
     end
     if response.code != "201"
-      raise "Unexpected response code: #{response.code}"
+      raise [
+        "Unexpected response code: #{response.code}",
+        "Response body: #{response.body}"
+      ].join("\n")
     else
       puts "Upload for #{filename} finished"
     end
