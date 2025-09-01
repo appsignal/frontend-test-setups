@@ -109,12 +109,19 @@ def upload_sourcemaps(app, uri, revision, push_api_key)
   base_path = "frameworks/#{app}/#{config.fetch(:build_dir)}/#{config.fetch(:js_dir)}/"
   Dir["#{base_path}*.js"].each do |path|
     filename = path.gsub(base_path, "")
+    sourcemap_path = "#{base_path}#{filename}.map"
+
+    unless File.exist?(sourcemap_path)
+      puts "Sourcemap file not found for #{filename}, skipping upload."
+      next
+    end
+
     puts "Uploading sourcemap for #{filename} to #{uri}..."
     full_uri =  URI("#{uri}?push_api_key=#{push_api_key}")
     params = {
       "name[]" => "http://localhost:5001/#{config.fetch(:js_dir)}/#{filename}",
       "revision" => revision,
-      "file" => UploadIO.new(File.open("#{base_path}/#{filename}.map"), "application/json", "#{filename}.map")
+      "file" => UploadIO.new(File.open(sourcemap_path), "application/json", "#{filename}.map")
     }
     request = Net::HTTP::Post::Multipart.new(full_uri, params)
     response = Net::HTTP.start(full_uri.host, full_uri.port, :use_ssl => true) do |http|
