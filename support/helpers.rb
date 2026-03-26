@@ -142,7 +142,7 @@ def run_command(command)
 end
 
 def run_install(app)
-  run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} install --force --no-fund --no-audit"
+  run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} install --frozen-lockfile --non-interactive"
 end
 
 def run_build(app)

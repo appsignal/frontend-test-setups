@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "Error tracking", :type => :feature do
+describe "Error tracking", type: :feature do
   before :all do
     Thread.new do
       run_endpoint
@@ -13,7 +13,8 @@ describe "Error tracking", :type => :feature do
     end
   end
 
-  all_apps.each do |a_app|
+  apps = ENV["TEST_APP"] ? [ENV["TEST_APP"]] : all_apps
+  apps.each do |a_app|
     context "for #{a_app}" do
       let(:app) { a_app }
 
@@ -51,7 +52,7 @@ describe "Error tracking", :type => :feature do
         body = JSON.parse(request.body.read)
 
         # Timestamp
-        expect(body["timestamp"]).to be > 1644138966
+        expect(body["timestamp"]).to be > 1_644_138_966
 
         # Error
         expect(body["error"]).to be_a_kind_of Hash
@@ -68,7 +69,7 @@ describe "Error tracking", :type => :feature do
         expect(body["revision"]).to eq "revision"
 
         # Tags
-        expect(body["tags"]). to be_a_kind_of Hash
+        expect(body["tags"]).to be_a_kind_of Hash
       end
     end
   end
