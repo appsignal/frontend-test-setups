@@ -146,7 +146,12 @@ def run_install(app)
 end
 
 def run_build(app)
-  run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} run build"
+  node_options = ""
+  if ["stimulus/3", "vue/2", "vue/3-class-component"].include?(app)
+    node_options = "NODE_OPTIONS=--openssl-legacy-provider "
+  end
+
+  run_command "cd frameworks/#{app} && #{node_options}#{PACKAGE_MANAGER} run build"
 end
 
 def app_packages(app)
