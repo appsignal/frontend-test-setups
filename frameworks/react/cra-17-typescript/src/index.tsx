@@ -8,11 +8,7 @@ import reportWebVitals from './reportWebVitals';
 import { store } from './store';
 import { Provider } from 'react-redux';
 
-import appsignal from "./appsignal.js"
-
-const FallbackComponent = () => (
-  <div>An error was thrown</div>
-);
+import appsignal from "./appsignal"
 
 const WrappedApp = () => (
   <ErrorBoundary

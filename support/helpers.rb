@@ -92,12 +92,12 @@ def write_appsignal_config(app, frontend_key, revision, uri)
   @frontend_key = frontend_key
   @revision = revision
   @uri = uri
-  puts "Writing appsignal with #{@frontend_key} - #{@revision} - #{@uri}"
   filename = if File.exist?("frameworks/#{app}/tsconfig.json")
                "appsignal.ts"
              else
                "appsignal.js"
              end
+  puts "Writing #{filename} with #{@frontend_key} - #{@revision} - #{@uri}"
   File.write(
     "frameworks/#{app}/src/#{filename}",
     render_erb("support/templates/#{filename}.erb", binding)
