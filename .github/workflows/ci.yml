@@ -1,0 +1,70 @@
+name: Frontend test setups tests
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    types:
+    - opened
+    - reopened
+    - synchronize
+  schedule:
+  - cron: "0 0 * * 1-5"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'main') }}
+
+env:
+  RUNNING_IN_CI: "true"
+
+jobs:
+  test:
+    name: "Test ${{ matrix.app }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        app:
+          - angular/13
+          - angular/14
+          - react/cra-16
+          - react/cra-17
+          - react/cra-17-typescript
+          - react/cra-18
+          - react/vite-18
+          - react/vite-19
+          - stimulus/3
+          - vue/2
+          - vue/3
+          - vue/3-class-component
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .tool-versions
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Install yarn
+        run: npm install -g yarn
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Run tests
+        env:
+          CI: "true"
+          TEST_APP: ${{ matrix.app }}
+        run: bundle exec rspec

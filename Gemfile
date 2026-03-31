@@ -1,10 +1,12 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gem 'rake'
-gem 'capybara'
-gem 'multipart-post'
-gem 'pry'
-gem 'rspec'
-gem 'selenium-webdriver'
-gem 'sinatra'
-gem 'webrick'
+gem "rake"
+gem "capybara"
+gem "multipart-post"
+gem "pry"
+gem "rspec"
+gem "selenium-webdriver"
+gem "sinatra"
+gem "webrick"
+gem "puma"
+gem "rackup"

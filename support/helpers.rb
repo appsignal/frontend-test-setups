@@ -92,12 +92,12 @@ def write_appsignal_config(app, frontend_key, revision, uri)
   @frontend_key = frontend_key
   @revision = revision
   @uri = uri
-  puts "Writing appsignal with #{@frontend_key} - #{@revision} - #{@uri}"
   filename = if File.exist?("frameworks/#{app}/tsconfig.json")
                "appsignal.ts"
              else
                "appsignal.js"
              end
+  puts "Writing #{filename} with #{@frontend_key} - #{@revision} - #{@uri}"
   File.write(
     "frameworks/#{app}/src/#{filename}",
     render_erb("support/templates/#{filename}.erb", binding)
@@ -142,11 +142,16 @@ def run_command(command)
 end
 
 def run_install(app)
-  run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} install --force --no-fund --no-audit"
+  run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} install --frozen-lockfile --non-interactive"
 end
 
 def run_build(app)
-  run_command "cd frameworks/#{app} && #{PACKAGE_MANAGER} run build"
+  node_options = ""
+  if ["stimulus/3", "vue/2", "vue/3-class-component"].include?(app)
+    node_options = "NODE_OPTIONS=--openssl-legacy-provider "
+  end
+
+  run_command "cd frameworks/#{app} && #{node_options}#{PACKAGE_MANAGER} run build"
 end
 
 def app_packages(app)
