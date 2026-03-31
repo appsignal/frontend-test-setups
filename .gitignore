@@ -3,7 +3,6 @@ node_modules
 .pnp
 .pnp.js
 package-lock.json
-yarn.lock
 coverage
 build
 dist
@@ -11,4 +10,3 @@ appsignal.js
 appsignal.ts
 *.log
 .DS_Store
-Gemfile.lock
